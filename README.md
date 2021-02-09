@@ -1,6 +1,6 @@
 # gudp
 
-general user data platform
+general user data platform, use lift as stream
 
 ## Compile Proto files
 

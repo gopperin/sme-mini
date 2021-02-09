@@ -53,8 +53,8 @@ func main() {
 	/* api base */
 	myrouter.SetupBaseRouter(router)
 
-	// KYC KYC
-	myrouter.SetupKYCRouter(router)
+	// User User
+	myrouter.SetupUserRouter(router)
 
 	server := &http.Server{
 		Addr:         ":" + config.Server.Port,
