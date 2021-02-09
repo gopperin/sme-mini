@@ -17,6 +17,7 @@
 # config file
 *.yaml
 *.db
+*.tmp
 
 # Folders
 tmp
