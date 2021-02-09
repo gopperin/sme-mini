@@ -41,7 +41,7 @@ func publishEvent(client lift.Client, event *pb.Event) {
 	if _, err := client.Publish(ctx, event.Stream,
 		[]byte(event.EventData),
 		lift.Key([]byte(strconv.FormatInt(event.EventId, 10))),
-		lift.ToPartition(0),
+		lift.ToPartition(config.Lift.Partition),
 		lift.AckPolicyAll(),
 	); err != nil {
 		fmt.Println(err.Error())

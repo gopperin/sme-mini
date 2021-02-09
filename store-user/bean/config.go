@@ -18,6 +18,7 @@ type DBConfig struct {
 
 // LiftConfig LiftConfig
 type LiftConfig struct {
-	Addrs    []string
-	Subjects map[string]interface{}
+	Addrs     []string
+	Partition int32
+	Subjects  map[string]interface{}
 }

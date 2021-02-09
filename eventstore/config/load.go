@@ -60,7 +60,7 @@ func loadLocalConfig(path string) error {
 	Server.GrpcPort = local.GetString("server.grpc.port")
 
 	Lift.Addrs = local.GetStringSlice("lift.addrs")
-
+	Lift.Partition = local.GetInt32("lift.partition")
 	Lift.Subjects = local.GetStringMap("lift.subject")
 
 	return nil

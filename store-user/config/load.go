@@ -55,7 +55,7 @@ func loadLocalConfig(path string) error {
 	}
 
 	Lift.Addrs = local.GetStringSlice("lift.addrs")
-
+	Lift.Partition = local.GetInt32("lift.partition")
 	Lift.Subjects = local.GetStringMap("lift.subject")
 
 	return nil

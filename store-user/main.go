@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	lift "github.com/liftbridge-io/go-liftbridge/v2"
 
+	"store-user/bolt"
 	"store-user/config"
 	"store-user/controller"
 	"store-user/persist"
@@ -64,13 +66,27 @@ func main() {
 
 	createStream(_liftClient, config.Lift.Subjects)
 
+	_db, _ := bolt.OpenDatabase("my.db")
+	defer _db.Close()
+
 	ctx := context.Background()
+
+	var _offset int64
+	_strOffset := _db.GetData("gudp.user.create", "offset")
+	if len(_strOffset) > 0 {
+		_offset, _ = strconv.ParseInt(_strOffset, 10, 64)
+	}
+	fmt.Println("start", "gudp.user.create", _offset)
 	if err := _liftClient.Subscribe(ctx, "gudp.user.create", func(msg *lift.Message, err error) {
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
 		fmt.Println("gudp.user.create:", msg.Timestamp(), msg.Offset(), string(msg.Key()), string(msg.Value()))
+
+		// 保存offset
+		_db.PutData("gudp.user.create", "offset", strconv.FormatInt(msg.Offset()+1, 10))
+
 		var cmd pb.GudpUserCreateCommand
 		err = json.Unmarshal(msg.Value(), &cmd)
 		if err != nil {
@@ -80,7 +96,7 @@ func main() {
 		fmt.Println("CreateUser", cmd)
 		controller.CreateUser(cmd)
 
-	}, lift.StartAtEarliestReceived(), lift.Partition(0)); err != nil {
+	}, lift.StartAtOffset(_offset), lift.Partition(config.Lift.Partition)); err != nil {
 		panic(err)
 	}
 
