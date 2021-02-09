@@ -1,0 +1,12 @@
+syntax = "proto3";
+package pb;
+
+message GudpUserCreateCommand {
+    int64 uid = 1;    
+    string nick_name = 2;
+    string mobile = 3;
+    string email = 4;
+    string pwd = 5;
+    string secret_key = 6;    
+}
+
