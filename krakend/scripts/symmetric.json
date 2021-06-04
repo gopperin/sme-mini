@@ -1,0 +1,10 @@
+{
+	"keys": [
+		{
+			"kty": "oct",
+			"k": "V2tGUklYaHpkekk(base64)",
+			"kid": "gopperin",
+			"alg": "HS256"
+		}
+	]
+}
