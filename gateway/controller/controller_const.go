@@ -10,5 +10,5 @@ const (
 
 // LrucacheKey LrucacheKey
 const (
-	LrucacheKeyMsgTempl = "gudp.msg.templ."
+	lrucacheKeyMsgTempl = "gudp.msg.templ."
 )

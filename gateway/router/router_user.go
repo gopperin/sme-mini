@@ -11,11 +11,8 @@ import (
 // SetupUserRouter SetupUserRouter
 func SetupUserRouter(g *gin.Engine) {
 	r := g.Group("/api/v1/user")
-	{
-	}
 	r.Use(myapi.SignedAuth(config.Server.APIAppendKey, "", config.Server.APIMd5Key, nil))
 	{
-
 		// 绑定用户
 		r.POST("/", handler.CreateUser)
 

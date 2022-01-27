@@ -18,54 +18,54 @@ type Database struct {
 
 // GetData GetData
 func (db *Database) GetData(bucket, key string) string {
-	var _ret string
+	var ret string
 	db.View(func(tx *bolt.Tx) error {
-		_bucket := tx.Bucket([]byte(bucket))
-		if nil == _bucket {
+		bucket := tx.Bucket([]byte(bucket))
+		if nil == bucket {
 			fmt.Println("bucket is nil")
-			_ret = ""
+			ret = ""
 			return nil
 		}
-		_bytes := _bucket.Get([]byte(key))
-		if nil == _bytes {
+		bytes := bucket.Get([]byte(key))
+		if nil == bytes {
 			fmt.Println("key is nil")
-			_ret = ""
+			ret = ""
 		} else {
-			_ret = string(_bytes)
+			ret = string(bytes)
 		}
 
 		return nil
 	})
-	return _ret
+	return ret
 }
 
 // GetAllKey GetAllKey
 func (db *Database) GetAllKey(bucket string) string {
-	var _ret string
+	var ret string
 	db.View(func(tx *bolt.Tx) error {
-		_bucket := tx.Bucket([]byte(bucket))
-		if nil == _bucket {
+		bucket := tx.Bucket([]byte(bucket))
+		if nil == bucket {
 			fmt.Println("bucket is nil")
 			return nil
 		}
-		_cursor := _bucket.Cursor()
-		for k, v := _cursor.First(); k != nil; k, v = _cursor.Next() {
+		cursor := bucket.Cursor()
+		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
 			fmt.Printf("key = %s,value = %s\n", k, v)
 		}
 		return nil
 	})
-	return _ret
+	return ret
 }
 
 // PutData PutData
 func (db *Database) PutData(bucket, key, value string) error {
 	err := db.Update(func(tx *bolt.Tx) error {
-		_bucket, err := tx.CreateBucketIfNotExists([]byte(bucket))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(bucket))
 		if err != nil {
 			return err
 		}
 
-		err = _bucket.Put([]byte(key), []byte(value))
+		err = bucket.Put([]byte(key), []byte(value))
 		if err != nil {
 			return err
 		}

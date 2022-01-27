@@ -16,6 +16,9 @@ import (
 	pb "types/pb"
 )
 
+// EventGudpUserCreate EventGudpUserCreate
+const EventGudpUserCreate = "gudp.user.create"
+
 // createStream
 func createStream(client lift.Client, subjects map[string]interface{}) error {
 
@@ -57,35 +60,35 @@ func main() {
 	}
 	fmt.Println("====== mariadb init ======")
 
-	_liftClient, err := lift.Connect(config.Lift.Addrs)
+	liftClient, err := lift.Connect(config.Lift.Addrs)
 	if err != nil {
 		fmt.Println("*** lift error : ", err.Error())
 		return
 	}
-	defer _liftClient.Close()
+	defer liftClient.Close()
 
-	createStream(_liftClient, config.Lift.Subjects)
+	createStream(liftClient, config.Lift.Subjects)
 
-	_db, _ := bolt.OpenDatabase("my.db")
-	defer _db.Close()
+	db, _ := bolt.OpenDatabase("my.db")
+	defer db.Close()
 
 	ctx := context.Background()
 
-	var _offset int64
-	_strOffset := _db.GetData("gudp.user.create", "offset")
-	if len(_strOffset) > 0 {
-		_offset, _ = strconv.ParseInt(_strOffset, 10, 64)
+	var offset int64
+	strOffset := db.GetData(EventGudpUserCreate, "offset")
+	if len(strOffset) > 0 {
+		offset, _ = strconv.ParseInt(strOffset, 10, 64)
 	}
-	fmt.Println("start", "gudp.user.create", _offset)
-	if err := _liftClient.Subscribe(ctx, "gudp.user.create", func(msg *lift.Message, err error) {
+	fmt.Println("start", EventGudpUserCreate, offset)
+	if err := liftClient.Subscribe(ctx, EventGudpUserCreate, func(msg *lift.Message, err error) {
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-		fmt.Println("gudp.user.create:", msg.Timestamp(), msg.Offset(), string(msg.Key()), string(msg.Value()))
+		fmt.Println(EventGudpUserCreate, msg.Timestamp(), msg.Offset(), string(msg.Key()), string(msg.Value()))
 
 		// 保存offset
-		_db.PutData("gudp.user.create", "offset", strconv.FormatInt(msg.Offset()+1, 10))
+		db.PutData(EventGudpUserCreate, "offset", strconv.FormatInt(msg.Offset()+1, 10))
 
 		var cmd pb.GudpUserCreateCommand
 		err = json.Unmarshal(msg.Value(), &cmd)
@@ -93,10 +96,10 @@ func main() {
 			fmt.Println(err.Error())
 			return
 		}
-		fmt.Println("CreateUser", cmd)
+		fmt.Println(EventGudpUserCreate, "CreateUser", cmd)
 		controller.CreateUser(cmd)
 
-	}, lift.StartAtOffset(_offset), lift.Partition(config.Lift.Partition)); err != nil {
+	}, lift.StartAtOffset(offset), lift.Partition(config.Lift.Partition)); err != nil {
 		panic(err)
 	}
 

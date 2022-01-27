@@ -9,28 +9,28 @@ import (
 )
 
 // GetLangContent GetLangContent
-func GetLangContent(code, lang, _default string) string {
+func GetLangContent(code, lang, defaultStr string) string {
 	if len(code) == 0 {
-		return _default
+		return defaultStr
 	}
 
 	if len(lang) == 0 {
 		lang = "cn"
 	}
 
-	_key := LrucacheKeyMsgTempl + code + "." + lang
-	_value, _ok := lruCache.Get(_key)
-	if _ok {
-		fmt.Println("get MessageTemplate from lru:", _key)
-		return _value.(mystore.GudpMessageTemplateBase).Detail
+	key := lrucacheKeyMsgTempl + code + "." + lang
+	value, ok := lruCache.Get(key)
+	if ok {
+		fmt.Println("get MessageTemplate from lru:", key)
+		return value.(mystore.GudpMessageTemplateBase).Detail
 	}
 
-	_templ, err := persist.GMariadb.GetGudpSystemTemplateInfo(code, lang)
+	templ, err := persist.GMariadb.GetGudpSystemTemplateInfo(code, lang)
 	if err != nil {
-		return _default
+		return defaultStr
 	}
 
-	lruCache.Add(_key, _templ)
+	lruCache.Add(key, templ)
 
-	return _templ.Detail
+	return templ.Detail
 }

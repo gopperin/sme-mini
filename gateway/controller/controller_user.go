@@ -29,35 +29,35 @@ func CreateUser(cmd pb.GudpUserCreateCommand) (int64, error) {
 // GetUserByUID GetUserByUID
 func GetUserByUID(uid int64) (mystore.GudpUserBase, error) {
 
-	_obj, err := persist.GMariadb.GetUserByUID(uid)
+	obj, err := persist.GMariadb.GetUserByUID(uid)
 	if err != nil {
-		return _obj, errors.New("获取用户信息错误")
+		return obj, errors.New("获取用户信息错误")
 	}
 
-	return _obj, nil
+	return obj, nil
 }
 
 // CreateUserRPC calls the CreateEvent RPC
 func CreateUserRPC(cmd pb.GudpUserCreateCommand) error {
 
-	_client := pb.NewEventStoreClient(mygrpc.ClientConn)
-	_jsonStr, _ := json.Marshal(cmd)
+	client := pb.NewEventStoreClient(mygrpc.ClientConn)
+	jsonStr, _ := json.Marshal(cmd)
 
 	event := &pb.Event{
 		EventId:       cmd.Uid,
 		EventType:     myconstant.EventUserCreate,
 		AggregateId:   cmd.Uid,
 		AggregateType: myconstant.AggregateUser,
-		EventData:     string(_jsonStr),
+		EventData:     string(jsonStr),
 		Channel:       myconstant.AggregateUser,
 		Stream:        myconstant.EventUserCreate,
 	}
 
-	_resp, err := _client.CreateEvent(context.Background(), event)
+	resp, err := client.CreateEvent(context.Background(), event)
 	if err != nil {
 		return errors.Wrap(err, "Error from RPC server")
 	}
-	if _resp.IsSuccess {
+	if resp.IsSuccess {
 		return nil
 	}
 	return errors.Wrap(err, "Error from RPC server")

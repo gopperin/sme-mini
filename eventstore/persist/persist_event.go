@@ -7,14 +7,14 @@ import (
 
 // CreateEvent CreateEvent Persist
 func (maria *Mariadb) CreateEvent(in pb.Event) error {
-	var _event mystore.GudpEvent
-	_event.EventID = in.EventId
-	_event.EventType = in.EventType
-	_event.AggregateID = in.AggregateId
-	_event.AggregateType = in.AggregateType
-	_event.EventData = in.EventData
-	_event.ExData = in.ExData
-	_event.Channel = in.Channel
-	_event.Stream = in.Stream
-	return maria.db.Create(&_event).Error
+	var event mystore.GudpEvent
+	event.EventID = in.EventId
+	event.EventType = in.EventType
+	event.AggregateID = in.AggregateId
+	event.AggregateType = in.AggregateType
+	event.EventData = in.EventData
+	event.ExData = in.ExData
+	event.Channel = in.Channel
+	event.Stream = in.Stream
+	return maria.db.Create(&event).Error
 }
