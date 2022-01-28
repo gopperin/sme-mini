@@ -14,9 +14,6 @@ import (
 // MariaDB 数据库相关配置
 var MariaDB bean.DBConfig
 
-// Redis Redis相关配置
-var Redis bean.RedisConfig
-
 // Server Server Config
 var Server bean.ServerConfig
 
@@ -63,11 +60,6 @@ func loadLocalConfig(path string) error {
 	Server.Release = local.GetString("server.release")
 	Server.Version = local.GetString("server.version")
 	Server.GrpcURI = local.GetString("server.grpc_uri")
-	Server.DesKey = local.GetString("server.deskey")
-
-	Redis.Addr = local.GetString("redis.addr")
-	Redis.Pwd = local.GetString("redis.pwd")
-	Redis.PoolSize = local.GetInt("redis.pool_size")
 
 	return nil
 }

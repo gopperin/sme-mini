@@ -88,25 +88,26 @@ func main() {
 		fmt.Println("*** mariadb error : ", err.Error())
 		return
 	}
-	fmt.Println("====== mariadb init ======")
+	fmt.Println("====== mariadb init")
 	defer persist.Close()
 
-	_liftClient, err := lift.Connect(config.Lift.Addrs)
+	liftClient, err := lift.Connect(config.Lift.Addrs)
 	if err != nil {
 		fmt.Println("*** lift error : ", err.Error())
 		return
 	}
-	defer _liftClient.Close()
+	defer liftClient.Close()
 
-	createStream(_liftClient, config.Lift.Subjects)
+	createStream(liftClient, config.Lift.Subjects)
 
 	lis, err := net.Listen("tcp", config.Server.GrpcPort)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	fmt.Println("====== grpc listen:", config.Server.GrpcPort)
 
 	// Creates a new gRPC server
 	s := grpc.NewServer()
-	pb.RegisterEventStoreServer(s, &server{_liftClient})
+	pb.RegisterEventStoreServer(s, &server{liftClient})
 	s.Serve(lis)
 }

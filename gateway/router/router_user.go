@@ -19,7 +19,7 @@ func SetupUserRouter(g *gin.Engine) {
 		// 获取用户
 		r.DELETE("/", handler.DeleteUser)
 
-		// 获取用户
+		// 修改用户
 		r.PUT("/", handler.PutUser)
 
 		// 获取用户

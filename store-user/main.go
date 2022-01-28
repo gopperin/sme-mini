@@ -16,12 +16,11 @@ import (
 	pb "types/pb"
 )
 
-// EventGudpUserCreate EventGudpUserCreate
-const EventGudpUserCreate = "gudp.user.create"
+// EventUserCreate EventUserCreate
+const EventUserCreate = "event.user.create"
 
 // createStream
 func createStream(client lift.Client, subjects map[string]interface{}) error {
-
 	// 遍历配置的subject
 	for _subject, _streams := range subjects {
 
@@ -75,20 +74,20 @@ func main() {
 	ctx := context.Background()
 
 	var offset int64
-	strOffset := db.GetData(EventGudpUserCreate, "offset")
+	strOffset := db.GetData(EventUserCreate, "offset")
 	if len(strOffset) > 0 {
 		offset, _ = strconv.ParseInt(strOffset, 10, 64)
 	}
-	fmt.Println("start", EventGudpUserCreate, offset)
-	if err := liftClient.Subscribe(ctx, EventGudpUserCreate, func(msg *lift.Message, err error) {
+	fmt.Println("start event:", EventUserCreate, "with offset:", offset)
+	if err := liftClient.Subscribe(ctx, EventUserCreate, func(msg *lift.Message, err error) {
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-		fmt.Println(EventGudpUserCreate, msg.Timestamp(), msg.Offset(), string(msg.Key()), string(msg.Value()))
+		fmt.Println(EventUserCreate, msg.Timestamp(), msg.Offset(), string(msg.Key()), string(msg.Value()))
 
 		// 保存offset
-		db.PutData(EventGudpUserCreate, "offset", strconv.FormatInt(msg.Offset()+1, 10))
+		db.PutData(EventUserCreate, "offset", strconv.FormatInt(msg.Offset()+1, 10))
 
 		var cmd pb.GudpUserCreateCommand
 		err = json.Unmarshal(msg.Value(), &cmd)
@@ -96,7 +95,7 @@ func main() {
 			fmt.Println(err.Error())
 			return
 		}
-		fmt.Println(EventGudpUserCreate, "CreateUser", cmd)
+		fmt.Println(EventUserCreate, "CreateUser", cmd)
 		controller.CreateUser(cmd)
 
 	}, lift.StartAtOffset(offset), lift.Partition(config.Lift.Partition)); err != nil {

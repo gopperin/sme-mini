@@ -1,0 +1,16 @@
+
+###############################################################################
+#
+#    lift Config section
+#
+###############################################################################
+
+lift:
+  addrs: "localhost:9292 localhost:9292 localhost:9292"
+  partition: 10
+  subjects:
+    event.user:
+      - "event.user.create"
+      - "event.user.delete"
+    event.prod:
+      - "event.prod.create"

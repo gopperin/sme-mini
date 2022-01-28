@@ -11,7 +11,6 @@ type ServerConfig struct {
 	Release      string
 	Version      string
 	GrpcURI      string
-	DesKey       string
 }
 
 // APIConfig APIConfig Struct
@@ -19,13 +18,6 @@ type APIConfig struct {
 	AppendKey   string
 	Md5Key      string
 	IPWhiteList map[string]interface{}
-}
-
-// RedisConfig RedisConfig Struct
-type RedisConfig struct {
-	Addr     string
-	Pwd      string
-	PoolSize int
 }
 
 // DBConfig DBConfig Struct
