@@ -1,6 +1,4 @@
-package bean
-
-import ()
+package config
 
 // ServerConfig ServerConfig Struct
 type ServerConfig struct {

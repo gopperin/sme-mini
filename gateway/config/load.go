@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"gateway/bean"
+	"github.com/gopperin/sme-mini/gateway/bean"
 )
 
 // MariaDB 数据库相关配置
@@ -23,17 +23,10 @@ var p string
 
 func init() {
 
-	flag.StringVar(&p, "p", "/root/union/config", "set `prefix` path")
+	flag.StringVar(&p, "p", "./", "set `prefix` path")
 	flag.Parse()
-	fmt.Println(p)
 
-	err := loadRemoteConfig(p)
-	if err != nil {
-		fmt.Println("load remote config error:", err.Error())
-		os.Exit(0)
-	}
-
-	err = loadLocalConfig("./")
+	err := loadLocalConfig(p)
 	if err != nil {
 		fmt.Println("load local config error:", err.Error())
 		os.Exit(0)
@@ -61,35 +54,15 @@ func loadLocalConfig(path string) error {
 	Server.Version = local.GetString("server.version")
 	Server.GrpcURI = local.GetString("server.grpc_uri")
 
-	return nil
-}
-
-func loadRemoteConfig(path string) error {
-	remote := viper.New()
-	remote.SetEnvPrefix(cmdRoot)
-	remote.AutomaticEnv()
-	replacer := strings.NewReplacer(".", "_")
-	remote.SetEnvKeyReplacer(replacer)
-	remote.SetConfigName(cmdRoot)
-	remote.AddConfigPath(path)
-
-	err := remote.ReadInConfig()
-	if err != nil {
-		return err
-	}
-
-	Server.APIAppendKey = remote.GetString("server.api.appendkey")
-	Server.APIMd5Key = remote.GetString("server.api.md5key")
-
-	MariaDB.Dialect = remote.GetString("database.dialect")
-	MariaDB.Database = remote.GetString("database.database")
-	MariaDB.User = remote.GetString("database.user")
-	MariaDB.Password = remote.GetString("database.password")
-	MariaDB.Host = remote.GetString("database.host")
-	MariaDB.Port = remote.GetInt("database.port")
-	MariaDB.Charset = remote.GetString("database.charset")
-	MariaDB.MaxIdleConns = remote.GetInt("database.maxIdleConns")
-	MariaDB.MaxOpenConns = remote.GetInt("database.maxOpenConns")
+	MariaDB.Dialect = local.GetString("database.dialect")
+	MariaDB.Database = local.GetString("database.database")
+	MariaDB.User = local.GetString("database.user")
+	MariaDB.Password = local.GetString("database.password")
+	MariaDB.Host = local.GetString("database.host")
+	MariaDB.Port = local.GetInt("database.port")
+	MariaDB.Charset = local.GetString("database.charset")
+	MariaDB.MaxIdleConns = local.GetInt("database.maxIdleConns")
+	MariaDB.MaxOpenConns = local.GetInt("database.maxOpenConns")
 	MariaDB.URL = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
 		MariaDB.User, MariaDB.Password, MariaDB.Host, MariaDB.Port, MariaDB.Database, MariaDB.Charset)
 

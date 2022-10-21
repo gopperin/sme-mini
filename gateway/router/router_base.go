@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	"gateway/handler"
+	"github.com/gopperin/sme-mini/gateway/handler"
 )
 
 // SetupBaseRouter SetupBaseRouter

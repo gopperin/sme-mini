@@ -1,12 +1,12 @@
 package persist
 
 import (
-	mystore "types/mariadb"
-	"types/pb"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
+	"github.com/gopperin/sme-mini/types/proto"
 )
 
 // CreateEvent CreateEvent Persist
-func (maria *Mariadb) CreateEvent(in pb.Event) error {
+func (maria *Mariadb) CreateEvent(in proto.Event) error {
 	var event mystore.GudpEvent
 	event.EventID = in.EventId
 	event.EventType = in.EventType

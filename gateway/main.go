@@ -10,11 +10,11 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"golang.org/x/sync/errgroup"
 
-	"gateway/config"
-	"gateway/grpc"
-	"gateway/persist"
-	myrouter "gateway/router"
-	"gateway/snowflake"
+	"github.com/gopperin/sme-mini/gateway/config"
+	"github.com/gopperin/sme-mini/gateway/grpc"
+	"github.com/gopperin/sme-mini/gateway/persist"
+	myrouter "github.com/gopperin/sme-mini/gateway/router"
+	"github.com/gopperin/sme-mini/gateway/snowflake"
 )
 
 var (

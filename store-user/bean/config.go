@@ -1,7 +1,5 @@
 package bean
 
-import ()
-
 // DBConfig DBConfig Struct
 type DBConfig struct {
 	Dialect      string
@@ -20,5 +18,6 @@ type DBConfig struct {
 type LiftConfig struct {
 	Addrs     []string
 	Partition int32
+	CursorID  string
 	Subjects  map[string]interface{}
 }

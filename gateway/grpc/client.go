@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"gateway/config"
+	"github.com/gopperin/sme-mini/gateway/config"
 )
 
 // ClientConn ClientConn

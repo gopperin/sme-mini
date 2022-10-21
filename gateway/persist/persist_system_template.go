@@ -1,7 +1,7 @@
 package persist
 
 import (
-	mystore "types/mariadb"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // CreateGudpSystemTemplate CreateGudpSystemTemplate Persist

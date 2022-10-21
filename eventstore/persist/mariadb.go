@@ -6,8 +6,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"eventstore/config"
-	mystore "types/mariadb"
+	"github.com/gopperin/sme-mini/eventstore/config"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // GMariadb GMariadb
@@ -30,6 +30,7 @@ func (maria *Mariadb) Init() error {
 	db.DB().SetMaxIdleConns(config.MariaDB.MaxIdleConns)
 	db.DB().SetMaxOpenConns(config.MariaDB.MaxOpenConns)
 	db.DB().SetConnMaxLifetime(10 * time.Minute)
+
 	maria.db = db
 
 	if !db.HasTable(&mystore.GudpEvent{}) {

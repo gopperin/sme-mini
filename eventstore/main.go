@@ -12,9 +12,9 @@ import (
 	lift "github.com/liftbridge-io/go-liftbridge/v2"
 	"google.golang.org/grpc"
 
-	"eventstore/config"
-	"eventstore/persist"
-	"types/pb"
+	"github.com/gopperin/sme-mini/eventstore/config"
+	"github.com/gopperin/sme-mini/eventstore/persist"
+	"github.com/gopperin/sme-mini/types/proto"
 )
 
 type server struct {
@@ -22,7 +22,7 @@ type server struct {
 }
 
 // CreateEvent RPC creates a new Event into EventStore
-func (s *server) CreateEvent(ctx context.Context, in *pb.Event) (*pb.Response, error) {
+func (s *server) CreateEvent(ctx context.Context, in *proto.Event) (*proto.Response, error) {
 	// Persist events as immutable logs into CockroachDB
 	err := persist.GMariadb.CreateEvent(*in)
 	if err != nil {
@@ -30,11 +30,11 @@ func (s *server) CreateEvent(ctx context.Context, in *pb.Event) (*pb.Response, e
 	}
 	// Publish event on NATS Streaming Server
 	go publishEvent(s.LiftClient, in)
-	return &pb.Response{IsSuccess: true}, nil
+	return &proto.Response{IsSuccess: true}, nil
 }
 
 // publishEvent publishes an event via NATS Streaming server
-func publishEvent(client lift.Client, event *pb.Event) {
+func publishEvent(client lift.Client, event *proto.Event) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -49,8 +49,8 @@ func publishEvent(client lift.Client, event *pb.Event) {
 	fmt.Println("pub", event.Stream, event.AggregateId)
 }
 
-// createStream
-func createStream(client lift.Client, subjects map[string]interface{}) error {
+// preCreateStream
+func preCreateStream(client lift.Client, subjects map[string]interface{}) error {
 
 	// 遍历配置的subject
 	for _subject, _streams := range subjects {
@@ -98,7 +98,7 @@ func main() {
 	}
 	defer liftClient.Close()
 
-	createStream(liftClient, config.Lift.Subjects)
+	preCreateStream(liftClient, config.Lift.Subjects)
 
 	lis, err := net.Listen("tcp", config.Server.GrpcPort)
 	if err != nil {
@@ -108,6 +108,6 @@ func main() {
 
 	// Creates a new gRPC server
 	s := grpc.NewServer()
-	pb.RegisterEventStoreServer(s, &server{liftClient})
+	proto.RegisterEventStoreServer(s, &server{liftClient})
 	s.Serve(lis)
 }

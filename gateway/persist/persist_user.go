@@ -3,7 +3,7 @@ package persist
 import (
 	"errors"
 
-	mystore "types/mariadb"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // GetUserByUID GetUserByUID Persist

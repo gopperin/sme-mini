@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"gateway/config"
+	"github.com/gopperin/sme-mini/gateway/config"
 )
 
 // Index Index

@@ -6,7 +6,7 @@ es-scaffold, use lift as stream
 
 Run the command below from the types directory:
 
-protoc -I pb/ pb/*.proto --go_out=plugins=grpc:pb
+protoc -I types/proto/ types/proto/*.proto --go_out=plugins=grpc:types/proto
 
 ## sonar
 

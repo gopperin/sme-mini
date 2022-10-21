@@ -3,9 +3,9 @@ package controller
 import (
 	"fmt"
 
-	mystore "types/mariadb"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
 
-	"gateway/persist"
+	"github.com/gopperin/sme-mini/gateway/persist"
 )
 
 // GetLangContent GetLangContent

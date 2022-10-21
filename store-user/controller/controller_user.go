@@ -1,20 +1,11 @@
 package controller
 
 import (
-	"store-user/persist"
-	store "types/mariadb"
-	pb "types/pb"
+	"github.com/gopperin/sme-mini/store-user/persist"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // CreateUser CreateUser
-func CreateUser(cmd pb.GudpUserCreateCommand) error {
-	var obj store.GudpUser
-	obj.UID = cmd.Uid
-	obj.NickName = cmd.NickName
-	obj.Mobile = cmd.Mobile
-	obj.Email = cmd.Email
-	obj.Pwd = cmd.Pwd
-	obj.SecretKey = cmd.SecretKey
-
+func CreateUser(obj mystore.GudpUser) error {
 	return persist.GMariadb.CreateUser(obj)
 }

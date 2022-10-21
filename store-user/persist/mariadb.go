@@ -6,8 +6,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"store-user/config"
-	mystore "types/mariadb"
+	"github.com/gopperin/sme-mini/store-user/config"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // GMariadb GMariadb

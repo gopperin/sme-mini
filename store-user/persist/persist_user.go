@@ -1,7 +1,7 @@
 package persist
 
 import (
-	store "types/mariadb"
+	store "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // CreateUser CreateUser Persist

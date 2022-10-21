@@ -6,24 +6,24 @@ import (
 
 	"github.com/pkg/errors"
 
-	mygrpc "gateway/grpc"
-	"gateway/persist"
-	"gateway/snowflake"
-	myconstant "types/constant"
-	mystore "types/mariadb"
-	"types/pb"
+	mygrpc "github.com/gopperin/sme-mini/gateway/grpc"
+	"github.com/gopperin/sme-mini/gateway/persist"
+	"github.com/gopperin/sme-mini/gateway/snowflake"
+	myconstant "github.com/gopperin/sme-mini/types/constant"
+	mystore "github.com/gopperin/sme-mini/types/mariadb"
+	"github.com/gopperin/sme-mini/types/proto"
 )
 
 // CreateUser CreateUser
-func CreateUser(cmd pb.GudpUserCreateCommand) (int64, error) {
+func CreateUser(cmd mystore.GudpUserBase) (int64, error) {
 
-	cmd.Uid = snowflake.Olaf.ID64()
+	cmd.UID = snowflake.Olaf.ID64()
 
 	err := CreateUserRPC(cmd)
 	if err != nil {
 		return -1, err
 	}
-	return cmd.Uid, nil
+	return cmd.UID, nil
 }
 
 // GetUserByUID GetUserByUID
@@ -38,15 +38,15 @@ func GetUserByUID(uid int64) (mystore.GudpUserBase, error) {
 }
 
 // CreateUserRPC calls the CreateEvent RPC
-func CreateUserRPC(cmd pb.GudpUserCreateCommand) error {
+func CreateUserRPC(cmd mystore.GudpUserBase) error {
 
-	client := pb.NewEventStoreClient(mygrpc.ClientConn)
+	client := proto.NewEventStoreClient(mygrpc.ClientConn)
 	jsonStr, _ := json.Marshal(cmd)
 
-	event := &pb.Event{
-		EventId:       cmd.Uid,
+	event := &proto.Event{
+		EventId:       cmd.UID,
 		EventType:     myconstant.EventUserCreate,
-		AggregateId:   cmd.Uid,
+		AggregateId:   cmd.UID,
 		AggregateType: myconstant.AggregateUser,
 		EventData:     string(jsonStr),
 		Channel:       myconstant.AggregateUser,
