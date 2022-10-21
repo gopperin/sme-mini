@@ -1,11 +1,17 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/gopperin/sme-mini/store-user/persist"
 	mystore "github.com/gopperin/sme-mini/types/mariadb"
 )
 
 // CreateUser CreateUser
 func CreateUser(obj mystore.GudpUser) error {
-	return persist.GMariadb.CreateUser(obj)
+	err := persist.GMariadb.CreateUser(obj)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return nil
 }

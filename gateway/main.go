@@ -31,7 +31,7 @@ func main() {
 	fmt.Println("====== mariadb init ======")
 	defer persist.Close()
 
-	err = snowflake.Olaf.Init(1024, 1575043200000)
+	err = snowflake.Olaf.Init(8, 1666345843000)
 	if err != nil {
 		fmt.Println("*** flake error : ", err.Error())
 		return

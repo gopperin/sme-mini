@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### 获取用户
-GET http://127.0.0.1:18080/api/v1/user/765891743865372672
+GET http://127.0.0.1:18080/api/v1/user/765897466338869248
 Content-Type: application/json
 
 {
